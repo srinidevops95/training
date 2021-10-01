@@ -1,0 +1,23 @@
+#Setup Tomcat on Ubuntu
+
+#Install java
+apt-get install default-jdk
+sudo apt install openjdk-11-jdk
+
+#Download tomocat
+wget https://mirrors.estointernet.in/apache/tomcat/tomcat-9/v9.0.53/bin/apache-tomcat-9.0.53.tar.gz
+
+#Set Java home & catalina home
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+export CATALINA_HOME=/home/srini/projects/tomcat/apache-tomcat-9.0.53
+
+
+#start tomcat
+$CATALINA_HOME/bin/startup.sh
+
+# Tomcat run on 8080
+http://localhost:8080
+
+# jenkins on tomcat
+http://localhost:8080/jenkins
