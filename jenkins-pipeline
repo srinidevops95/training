@@ -1,0 +1,40 @@
+pipeline{
+    agent any
+    tools {
+	  terraform 'terraform-12'
+    }
+    stages{
+	  stage('Git Checkout'){
+	    steps{
+		   git branch: 'main', credentialsId: 'github', url: 'https://github.com/srinidevops95/demo-ecs.git'
+	   }
+	}
+	stage('Terraform init'){
+	   steps{
+	   	sh label: '', script: 'terraform init'
+	   }
+	}
+	stage('Terraform validate'){
+	   steps{
+	   	 sh label: '', script: 'terraform validate'
+	   }
+	}
+	stage('Terraform plan'){
+	   steps{
+	   	 sh label: '', script: 'terraform plan'
+	   }
+	}
+	stage('Approval') {
+      steps {
+        script {
+          def userInput = input(id: 'confirm', message: 'Apply Terraform?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm'] ])
+        }
+      }
+    }
+	stage('Terraform apply'){
+	   steps{
+	   	 sh label: '', script: 'terraform apply'
+	   }
+	}
+    }	  
+}
