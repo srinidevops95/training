@@ -1,0 +1,25 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This is my EC2 stack"
+Parameters:
+ SSHCIDR:
+   Description: This is for VPC CIDR
+   Type: String
+ HTTPCIDR:
+   Description: This is for HTTP CIDR
+   Type: String   
+Resources:
+  MySG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: CFT-SG
+      GroupDescription: my SG  
+      VpcId:
+        Fn::ImportValue:
+            CFT-VPC  
+      SecurityGroupIngress:
+       - 
+         CidrIp: !Ref SSHCIDR
+         FromPort: 22
+         IpProtocol: tcp
+         ToPort: 22  

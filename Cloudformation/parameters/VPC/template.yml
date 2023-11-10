@@ -1,0 +1,19 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This is my EC2 stack"
+Parameters:
+ VPCCIDR:
+   Description: This is for VPC CIDR
+   Type: String  
+Resources:
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VPCCIDR
+
+Outputs:
+ VPC:
+   Description: "Refrence to the created VPC"
+   Value: !Ref MyVPC
+   Export:
+     Name: CFT-VPC  

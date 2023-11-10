@@ -1,0 +1,41 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This is my EC2 stack"
+Resources:
+  MyEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: ap-south-1a
+      ImageId: ami-02e94b011299ef128 
+      InstanceType: t2.micro
+      KeyName: my-devops  
+      SecurityGroups:
+        - !Ref SSHSecurityGroup
+      UserData:
+        Fn::Base64: |
+           #!/bin/bash -xe
+           yum update -y
+           yum install -y httpd
+           systemctl start httpd
+           systemctl enable httpd
+           echo "My demo EC2 from user data" > /var/www/html/index.html
+
+  SSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "inbound for HTTP"
+      GroupName: my-SG-HTTP
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+    
+  EC2EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref MyEC2    

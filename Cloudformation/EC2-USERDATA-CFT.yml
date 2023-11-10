@@ -1,0 +1,22 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This is my EC2 stack"
+Resources:
+  MyEC2WithUserData:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: ap-south-1a
+      ImageId: ami-02e94b011299ef128 
+      InstanceType: t2.micro
+      KeyName: my-devops  
+      SecurityGroupIds:
+        #-  sg-0707326786ee34e50
+        - sg-0326e2089397348d5
+      UserData:
+        Fn::Base64: |
+           #!/bin/bash -xe
+           yum update -y
+           yum install -y httpd
+           systemctl start httpd
+           systemctl enable httpd
+           echo "My demo EC2 from user data" > /var/www/html/index.html

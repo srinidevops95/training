@@ -1,0 +1,24 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This is my EC2 stack"
+Parameters:
+ IMAGEID:
+   Description: This is AMI ID
+   Type: String
+ InstanceType:
+   Description: My Instance Type
+   Type: String
+ MyKey:
+   Description: My Key pair
+   Type: String   
+Resources:
+  MyEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: ap-south-1a
+      ImageId: !Ref IMAGEID 
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref MyKey
+        #SecurityGroupIds: 
+        #- sg-0707326786ee34e50
+        #- sg-0326e2089397348d5  

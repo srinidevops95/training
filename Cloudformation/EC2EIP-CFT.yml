@@ -1,0 +1,17 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This is my EC2 stack"
+Resources:
+  MyEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: ap-south-1a
+      ImageId: ami-02e94b011299ef128 
+      InstanceType: t2.micro
+      KeyName: my-devops
+        #SecurityGroups: sg-0707326786ee34e50
+
+  MyEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref MyEC2    

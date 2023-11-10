@@ -1,0 +1,15 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Stack for creating VPC and IGW"  
+Resources:
+  demovpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.18.0.0/23
+  demoIGW:
+    Type:  AWS::EC2::InternetGateway
+  IGWAttachmentToVPC:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref demovpc
+      InternetGatewayId: !Ref demoIGW    
