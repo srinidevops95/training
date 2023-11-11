@@ -1,0 +1,128 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This is my VPC template"
+Resources:
+  # VPC Declaration
+  ProjectVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+     CidrBlock: 10.8.0.0/16
+
+  # IGW Declaration
+  ProjectIGW:
+    Type: AWS::EC2::InternetGateway
+
+  # IGW attach with VPC
+  GatewayToInternet:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref ProjectVPC
+      InternetGatewayId: !Ref ProjectIGW
+
+  # Public Subnet 1
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVPC
+      AvailabilityZone: ap-south-1a
+      CidrBlock: 10.8.0.0/24
+      MapPublicIpOnLaunch: true
+
+  # Public Subnet 2
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVPC
+      AvailabilityZone: ap-south-1b
+      CidrBlock: 10.8.2.0/24
+      MapPublicIpOnLaunch: true
+
+  # Private Subnet 1
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVPC
+      AvailabilityZone: ap-south-1a
+      CidrBlock: 10.8.3.0/24
+      MapPublicIpOnLaunch: false
+
+  # Private Subnet 2
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVPC
+      AvailabilityZone: ap-south-1b
+      CidrBlock: 10.8.4.0/24
+      MapPublicIpOnLaunch: false
+
+  # Public RouteTable
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ProjectVPC
+
+  # Public Route
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: GatewayToInternet
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref GatewayToInternet
+
+  # PublicSubnet1 RouteTableAssociation
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+
+  # PublicSubnet2 RouteTableAssociation
+  PublicSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRouteTable
+
+  # NAT Gateway
+  NATGATEWAY:
+    Type: AWS::EC2::NatGateway
+    DependsOn: NatPublicIP
+    Properties:
+       SubnetId: !Ref PublicSubnet1
+       AllocationId: !GetAtt NatPublicIP.AllocationId
+
+  # NAT EIP
+  NatPublicIP:
+    Type: AWS::EC2::EIP
+    DependsOn: ProjectVPC
+    Properties:
+      Domain: vpc
+
+  # Private RouteTable
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ProjectVPC
+
+  # Private Route
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      NatGatewayId: !Ref NATGATEWAY
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+
+  # PrivateSubnet1 RouteTableAssociation
+  PrivateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+
+  # PrivateSubnet2 RouteTableAssociation
+  PrivateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
