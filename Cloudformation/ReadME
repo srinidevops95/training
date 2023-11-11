@@ -1,8 +1,15 @@
-Validate CFT:
-  - aws cloudformation validate-template --template-body file://template.yml
+PreRequisites:
+  - pip
+  - stackility (pip install stackility)
+  - cfn-flip (pip install cfn-flip)
 
-Deploy CFT:
-  - aws cloudformation deploy --template-file template.yml --stack-name my-stack
+Help on CloudFormation:
 
-Delete Stack:
-  - aws cloudformation delete-stack --stack-name my-stack
+    1. Validate CFT:
+        - aws cloudformation validate-template --template-body file://template.yml
+    
+    2. Deploy CFT:
+        - aws cloudformation deploy --template-file template.yml --stack-name my-stack
+    
+    3. Delete Stack:
+        - aws cloudformation delete-stack --stack-name my-stack
