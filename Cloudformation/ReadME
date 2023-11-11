@@ -3,6 +3,14 @@ PreRequisites:
   - stackility (pip install stackility)
   - cfn-flip (pip install cfn-flip)
 
+Convert YML, JSON Back & Forth
+a) If you modify the yaml, then run the following command:
+    cfn-flip -j -l template.yaml > template.json
+
+b) If you modify the json, then run the following command:
+    cfn-flip -y -l template.json > template.yaml
+
+
 Help on CloudFormation:
 
     1. Validate CFT:
