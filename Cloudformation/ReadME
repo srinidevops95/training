@@ -1,0 +1,8 @@
+Validate CFT:
+  - aws cloudformation validate-template --template-body file://template.yml
+
+Deploy CFT:
+  - aws cloudformation deploy --template-file template.yml --stack-name my-stack
+
+Delete Stack:
+  - aws cloudformation delete-stack --stack-name my-stack
